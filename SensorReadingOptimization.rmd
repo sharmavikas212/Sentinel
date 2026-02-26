@@ -1,15 +1,3 @@
----
-title: "Android Sensor Optimization Report"
-author: "Gemini Code Assist"
-date: "`r Sys.Date()`"
-output:
-  html_document:
-    theme: flatly
-    toc: true
-    toc_float: true
-    highlight: tango
----
-
 # Executive Summary
 
 This report details the architectural and code-level optimizations applied to the `Sentinel` Android application. The primary objective was to transition from a naive sensor implementation to a production-grade system capable of handling high-frequency data (60Hz+) with minimal battery impact and zero UI jank.
