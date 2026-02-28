@@ -42,6 +42,14 @@ Sentinel is built on a **Clean Architecture** foundation, ensuring modularity, t
 
 ---
 
+## 📸 App Screenshots
+
+> Screenshots are from a development build and may change.
+
+| Dashboard | Sensor Details |
+|---|---|
+| ![Dashboard](docs/screenshots/dashboard.png) | ![Sensor Details](docs/screenshots/sensor_details.png) |
+
 ## Roadmap
 
 ### ✅ Done
