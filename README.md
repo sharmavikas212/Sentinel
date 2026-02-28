@@ -42,45 +42,31 @@ Sentinel is built on a **Clean Architecture** foundation, ensuring modularity, t
 
 ---
 
-## ✅ Remaining TODOs (based on current state: sensor observing + basic UI, using Flow + DI + Compose)
+## Roadmap
 
-### UI / Compose polish
-- [ ] Move to Material 3 theming fully (color scheme, typography, dark mode, dynamic color)
-- [ ] Add reusable UI components (SensorCard, MetricRow, SectionHeader, Empty/Error states)
-- [ ] Add navigation (Navigation-Compose): Dashboard → Sensor details → Settings/About
-- [ ] Add Sensor Detail screen (single sensor: live reading + metadata like minDelay/range/vendor)
-- [ ] Add charts/sparklines for recent readings (optional but makes the dashboard “observability-like”)
+### ✅ Done
+- [x] Observed sensor data and displayed it in a basic Android UI
+- [x] Used Kotlin Flow for reactive updates
+- [x] Added DI setup
+- [x] Built UI using Jetpack Compose
 
-### App architecture (MVVM alignment)
-- [ ] Standardize UI state: `UiState` sealed class + one-way data flow (events/actions → ViewModel)
-- [ ] Add proper error handling + logging around sensor registration/unregistration
-- [ ] Lifecycle correctness: ensure sensors are registered/unregistered predictably (foreground/background)
+### 📝 To Do (now)
+- [ ] Improve Compose UI (Material 3 polish, better layout, dark mode)
+- [ ] Add navigation (Dashboard → Sensor Details)
+- [ ] Add Sensor Details screen (live value + sensor metadata)
+- [ ] Add local history (Room) to save readings
+- [ ] Add export/share (CSV/JSON)
+- [ ] Add basic tests (ViewModel + simple UI test)
+- [ ] Update README “Getting Started” + add screenshots
 
-### Data persistence (offline-first)
-- [ ] Add Room to store sensor readings (schema + DAO + migrations)
-- [ ] Add a History screen (filter by sensor + time range) backed by Room `Flow`
-- [ ] Add retention policy (max rows / time window) to prevent unbounded DB growth
-
-### Export / sharing
-- [ ] Export logged data as CSV/JSON (Storage Access Framework) + share intent
-- [ ] Add “Report bundle” export (device info + app version + selected sensor logs)
-
-### Background work
-- [ ] Add WorkManager job for periodic sampling (user-configurable interval + constraints)
-- [ ] Add settings with DataStore (sampling rate, retention, units, theme)
-
-### Quality + repo hygiene
-- [ ] Add Detekt + Ktlint (if not already) and enforce in CI
-- [ ] Add tests:
-  - [ ] ViewModel tests (coroutines-test + Flow testing)
-  - [ ] Repository/Room tests (in-memory Room)
-  - [ ] Compose UI smoke tests for main screens
-- [ ] GitHub Actions CI: build + lint/static analysis + unit tests on PRs
-
-### README accuracy (important)
-- [ ] Add a “Current Status” section: what is implemented today (Flows/DI/Compose sensor dashboard)
-- [ ] Separate “Planned: AWS IoT / Cloud pipeline” into a clearly marked roadmap section (only if not implemented yet)
-- [ ] Fix “Getting Started” clone command + add run instructions (min SDK, permissions, how to test on device) Add “Configuration” section for AWS (IoT endpoint, certs/keys, env/secrets handling)
+### 📡 Telemetry (later)
+- [ ] Define telemetry payload schema (JSON) + topic naming
+- [ ] Add MQTT publish pipeline from Android (buffer/queue + retry + reconnect)
+- [ ] Add device identity strategy (deviceId) + include app/device metadata
+- [ ] Add offline telemetry queue (Room) + background sync (WorkManager constraints)
+- [ ] Set up AWS IoT Core and verify messages are received
+- [ ] Add basic cloud visibility (CloudWatch logs/metrics/dashboard; Lambda optional)
+- [ ] Add “Telemetry Status” UI (connected/disconnected, queued count, last publish time)
 
 ## 🚀 Getting Started
 
