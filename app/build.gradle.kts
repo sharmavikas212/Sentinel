@@ -64,4 +64,6 @@ dependencies {
     implementation(libs.hilt.android) // Hilt DI codegen
     ksp(libs.hilt.compiler) // Required for @HiltViewModel
 
+    implementation(libs.charty)
+
 }

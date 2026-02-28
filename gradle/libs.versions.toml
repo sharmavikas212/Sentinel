@@ -14,6 +14,7 @@ ksp = "2.3.5"
 appcompat = "1.6.1"
 material = "1.10.0"
 activity = "1.12.4"
+charty = "3.0.0-rc01"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -37,6 +38,8 @@ hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.re
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+charty = { module = "com.himanshoe:charty", version.ref = "charty" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
