@@ -42,6 +42,35 @@ Sentinel is built on a **Clean Architecture** foundation, ensuring modularity, t
 
 ---
 
+## ✅ Remaining TODOs (derived from README claims)
+
+### Core Android (Edge Agent)
+- [ ] Implement Clean Architecture folder/module structure (domain/data/presentation) aligned with MVVM
+- [ ] Add a Repository layer for “telemetry signals” (sensors + system metrics)
+- [ ] Add Room persistence (entities/dao/database) and store readings for offline-first behavior
+- [ ] Add WorkManager background sync + retry/backoff + constraints (Charging + Wi‑Fi)
+- [ ] Implement runtime permissions UX (where needed) and robust “sensor not available” states
+- [ ] Add a proper Compose UI architecture (UiState sealed class, loading/empty/error, state hoisting)
+- [ ] Add navigation (Home → Sensor details → History/Export → Settings)
+- [ ] Add history + charts for sensor readings (details screen)
+
+### Cloud Telemetry Pipeline (AWS)
+- [ ] Define MQTT topic strategy + payload schema (versioned JSON) for telemetry events
+- [ ] Add AWS IoT Core connectivity from Android (auth strategy, reconnect, offline queue)
+- [ ] Create Lambda for ingestion/anomaly detection (basic thresholds first)
+- [ ] Publish metrics/logs to CloudWatch and document dashboards/alarms
+
+### Engineering Excellence (Quality Gating)
+- [ ] Add Detekt + Ktlint config and wire into Gradle
+- [ ] Add unit tests (ViewModel + domain use-cases) using JUnit/MockK + coroutines test tools
+- [ ] Add GitHub Actions workflow: assemble, lint/static analysis, unit tests (and optionally instrumented/Compose tests)
+
+### README / Developer Experience
+- [ ] Fix the clone command and add real setup steps (modules, build/run, required secrets)
+- [ ] Add architecture diagram image (or remove placeholder) + include data flow explanation
+- [ ] Add “Features” section that matches current reality (what works today vs planned)
+- [ ] Add “Configuration” section for AWS (IoT endpoint, certs/keys, env/secrets handling)
+
 ## 🚀 Getting Started
 
 ### Prerequisites
