@@ -96,11 +96,12 @@ fun Home(
     ambientTemperatureReading: Float = 0f,
     humidityReading: Float = 0f
 ) {
+    val scrollState = rememberScrollState()
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(Color.White)
-            .verticalScroll(rememberScrollState()),
+            .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
@@ -248,7 +249,8 @@ fun LightSensorReadingChart(reading: Float) {
         LineChart(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp),
+                .height(200.dp)
+                .padding(top = 16.dp),
             data = { currentData },
             color = ChartyColor.Solid(Color(Color.Blue.value)),
             lineConfig = LineChartConfig(

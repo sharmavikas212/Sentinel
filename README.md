@@ -46,8 +46,8 @@ Sentinel is built on a **Clean Architecture** foundation, ensuring modularity, t
 
 > Screenshots are from a development build and may change.
 
-| Dashboard | Sensor Details |
-|---|---|
+| Dashboard      | Sensor Details                                         |
+|----------------|--------------------------------------------------------|
 | ![Dashboard](docs/screenshots/dashboard.png) | ![Sensor Details](docs/screenshots/sensor_details.png) |
 
 ## Roadmap
@@ -86,4 +86,5 @@ Sentinel is built on a **Clean Architecture** foundation, ensuring modularity, t
 ### Local Development
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/](https://github.com/)[your-username]/sentinel-observability.git
+   git clone https://github.com/sharmavikas212/Sentinel.git
+   ```
