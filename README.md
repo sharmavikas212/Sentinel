@@ -42,34 +42,45 @@ Sentinel is built on a **Clean Architecture** foundation, ensuring modularity, t
 
 ---
 
-## ✅ Remaining TODOs (derived from README claims)
+## ✅ Remaining TODOs (based on current state: sensor observing + basic UI, using Flow + DI + Compose)
 
-### Core Android (Edge Agent)
-- [ ] Implement Clean Architecture folder/module structure (domain/data/presentation) aligned with MVVM
-- [ ] Add a Repository layer for “telemetry signals” (sensors + system metrics)
-- [ ] Add Room persistence (entities/dao/database) and store readings for offline-first behavior
-- [ ] Add WorkManager background sync + retry/backoff + constraints (Charging + Wi‑Fi)
-- [ ] Implement runtime permissions UX (where needed) and robust “sensor not available” states
-- [ ] Add a proper Compose UI architecture (UiState sealed class, loading/empty/error, state hoisting)
-- [ ] Add navigation (Home → Sensor details → History/Export → Settings)
-- [ ] Add history + charts for sensor readings (details screen)
+### UI / Compose polish
+- [ ] Move to Material 3 theming fully (color scheme, typography, dark mode, dynamic color)
+- [ ] Add reusable UI components (SensorCard, MetricRow, SectionHeader, Empty/Error states)
+- [ ] Add navigation (Navigation-Compose): Dashboard → Sensor details → Settings/About
+- [ ] Add Sensor Detail screen (single sensor: live reading + metadata like minDelay/range/vendor)
+- [ ] Add charts/sparklines for recent readings (optional but makes the dashboard “observability-like”)
 
-### Cloud Telemetry Pipeline (AWS)
-- [ ] Define MQTT topic strategy + payload schema (versioned JSON) for telemetry events
-- [ ] Add AWS IoT Core connectivity from Android (auth strategy, reconnect, offline queue)
-- [ ] Create Lambda for ingestion/anomaly detection (basic thresholds first)
-- [ ] Publish metrics/logs to CloudWatch and document dashboards/alarms
+### App architecture (MVVM alignment)
+- [ ] Standardize UI state: `UiState` sealed class + one-way data flow (events/actions → ViewModel)
+- [ ] Add proper error handling + logging around sensor registration/unregistration
+- [ ] Lifecycle correctness: ensure sensors are registered/unregistered predictably (foreground/background)
 
-### Engineering Excellence (Quality Gating)
-- [ ] Add Detekt + Ktlint config and wire into Gradle
-- [ ] Add unit tests (ViewModel + domain use-cases) using JUnit/MockK + coroutines test tools
-- [ ] Add GitHub Actions workflow: assemble, lint/static analysis, unit tests (and optionally instrumented/Compose tests)
+### Data persistence (offline-first)
+- [ ] Add Room to store sensor readings (schema + DAO + migrations)
+- [ ] Add a History screen (filter by sensor + time range) backed by Room `Flow`
+- [ ] Add retention policy (max rows / time window) to prevent unbounded DB growth
 
-### README / Developer Experience
-- [ ] Fix the clone command and add real setup steps (modules, build/run, required secrets)
-- [ ] Add architecture diagram image (or remove placeholder) + include data flow explanation
-- [ ] Add “Features” section that matches current reality (what works today vs planned)
-- [ ] Add “Configuration” section for AWS (IoT endpoint, certs/keys, env/secrets handling)
+### Export / sharing
+- [ ] Export logged data as CSV/JSON (Storage Access Framework) + share intent
+- [ ] Add “Report bundle” export (device info + app version + selected sensor logs)
+
+### Background work
+- [ ] Add WorkManager job for periodic sampling (user-configurable interval + constraints)
+- [ ] Add settings with DataStore (sampling rate, retention, units, theme)
+
+### Quality + repo hygiene
+- [ ] Add Detekt + Ktlint (if not already) and enforce in CI
+- [ ] Add tests:
+  - [ ] ViewModel tests (coroutines-test + Flow testing)
+  - [ ] Repository/Room tests (in-memory Room)
+  - [ ] Compose UI smoke tests for main screens
+- [ ] GitHub Actions CI: build + lint/static analysis + unit tests on PRs
+
+### README accuracy (important)
+- [ ] Add a “Current Status” section: what is implemented today (Flows/DI/Compose sensor dashboard)
+- [ ] Separate “Planned: AWS IoT / Cloud pipeline” into a clearly marked roadmap section (only if not implemented yet)
+- [ ] Fix “Getting Started” clone command + add run instructions (min SDK, permissions, how to test on device) Add “Configuration” section for AWS (IoT endpoint, certs/keys, env/secrets handling)
 
 ## 🚀 Getting Started
 
