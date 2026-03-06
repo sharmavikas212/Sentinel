@@ -33,7 +33,6 @@ Sentinel is built on a **Clean Architecture** foundation, ensuring modularity, t
 ---
 
 ## 🛠️ Engineering Excellence & Quality Gating
-*Adhering to Deloitte EAID and Google SDE standards for robust software delivery.*
 
 * **Static Analysis:** Enforced code quality via **Detekt** and **Ktlint** to maintain a clean, standardized codebase.
 * **Test-Driven Development:** High coverage achieved through **JUnit 5** and **MockK** for business logic validation.
