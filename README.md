@@ -1,4 +1,4 @@
-# Sentinel: Enterprise Mobile Observability & Telemetry Platform
+# Sentinel: Enterprise Mobile Observability & Analysis Platform
 
 **A High-Integrity Diagnostic Agent for Distributed Device Fleets.**
 
@@ -8,7 +8,7 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 ## 📊 Business Context
-In enterprise logistics, healthcare, and field operations, mobile devices are mission-critical infrastructure. "Silent" failures—thermal throttling, CPU spikes, and battery degradation—lead to hardware replacement costs and operational downtime.
+In enterprise logistics, and field operations, mobile devices are mission-critical infrastructure. "Silent" failures—thermal throttling, CPU spikes, and battery degradation—lead to hardware replacement costs and operational downtime.
 
 **Sentinel** transforms Android devices from "Black Boxes" into observable nodes. It captures high-fidelity system signals and streams them to an AWS-based telemetry lake, enabling proactive maintenance and reducing **Mean Time to Repair (MTTR)**.
 
@@ -17,16 +17,16 @@ In enterprise logistics, healthcare, and field operations, mobile devices are mi
 ## 🏗️ Technical Architecture
 Sentinel is built on a **Clean Architecture** foundation, ensuring modularity, testability, and enterprise-grade reliability.
 
-[Image of a professional three-tier architecture diagram: Mobile Edge Agent, AWS IoT Core Ingestion, and Observability Dashboard]
+[Image of a professional three-tier architecture diagram: Mobile Agent, Sensor data storage, and Analytics Dashboard]
 
-### 1. The Edge Agent (Android)
+### 1. The Emitting Agent (Android)
 * **Reactive Engine:** Utilizes **Kotlin Coroutines and StateFlow** for battery-efficient, non-blocking sensor polling.
 * **System Integrity:** Direct interaction with Linux kernel thermal zones via `/sys/class/thermal/` for accurate hardware data.
 * **Modern UI:** A declarative, high-performance dashboard built with **Jetpack Compose**.
 * **Offline-First:** Robust local persistence using **Room (SQLite)** to prevent data loss during network outages in the field.
 
-### 2. The Cloud Pipeline (AWS)
-* **Telemetry Stream:** Lightweight MQTT ingestion via **AWS IoT Core** to preserve mobile data and battery.
+### 2. The Cloud Data Lake (AWS)
+* **Telemetry Stream:** Lightweight data ingestion via **AWS IoT Core** to preserve mobile data and battery.
 * **Serverless Processing:** **AWS Lambda** functions for real-time anomaly detection and threshold alerting.
 * **Visualization:** Integration with **Amazon CloudWatch** for fleet-wide observability metrics.
 
@@ -68,7 +68,7 @@ Sentinel is built on a **Clean Architecture** foundation, ensuring modularity, t
 
 ### 📡 Telemetry (later)
 - [ ] Define telemetry payload schema (JSON) + topic naming
-- [ ] Add MQTT publish pipeline from Android (buffer/queue + retry + reconnect)
+- [ ] Add publish pipeline from Android (buffer/queue + retry + reconnect)
 - [ ] Add device identity strategy (deviceId) + include app/device metadata
 - [ ] Add offline telemetry queue (Room) + background sync (WorkManager constraints)
 - [ ] Set up AWS IoT Core and verify messages are received
