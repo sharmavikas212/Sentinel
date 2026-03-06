@@ -65,6 +65,7 @@ class HomeActivity : ComponentActivity() {
                 val magnetometer by homeViewModel.magnetometerValue.collectAsStateWithLifecycle()
                 val temp by homeViewModel.ambientTemperatureValue.collectAsStateWithLifecycle()
                 val humidity by homeViewModel.humidityValue.collectAsStateWithLifecycle()
+                val batteryPercentage by homeViewModel.batteryPercentage.collectAsStateWithLifecycle()
 
 
                 Home(
@@ -75,7 +76,8 @@ class HomeActivity : ComponentActivity() {
                     pressureReading = pressure,
                     magnetometerReading = magnetometer,
                     ambientTemperatureReading = temp,
-                    humidityReading = humidity
+                    humidityReading = humidity,
+                    batteryPercentage = batteryPercentage
                 )
             }
         }
@@ -94,7 +96,8 @@ fun Home(
     pressureReading: Float = 0f,
     magnetometerReading: FloatArray = FloatArray(3),
     ambientTemperatureReading: Float = 0f,
-    humidityReading: Float = 0f
+    humidityReading: Float = 0f,
+    batteryPercentage: Float = 0f
 ) {
     val scrollState = rememberScrollState()
     Column(
@@ -118,6 +121,7 @@ fun Home(
         SensorReading("Magnetometer Sensor", magnetometerReading)
         SensorReading("Ambient Temperature Sensor", ambientTemperatureReading)
         SensorReading("Humidity Sensor", humidityReading)
+        SensorReading("Battery Percentage", batteryPercentage)
         Spacer(modifier = Modifier.height(16.dp))
         Compass(magnetometerReading)
         LightSensorReadingChart(lightReading)

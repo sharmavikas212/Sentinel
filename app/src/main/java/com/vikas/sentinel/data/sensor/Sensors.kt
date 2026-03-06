@@ -67,3 +67,9 @@ class HumiditySensor(
     sensorFeature = PackageManager.FEATURE_SENSOR_RELATIVE_HUMIDITY,
     sensorType = Sensor.TYPE_RELATIVE_HUMIDITY
 )
+
+class BatteryPercentage(
+    context: Context
+) : BatterySensor(
+    context = context
+)

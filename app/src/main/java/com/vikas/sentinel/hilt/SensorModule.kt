@@ -3,6 +3,7 @@ package com.vikas.sentinel.hilt
 import android.content.Context
 import com.vikas.sentinel.data.sensor.AccelerometerSensor
 import com.vikas.sentinel.data.sensor.AmbientTemperatureSensor
+import com.vikas.sentinel.data.sensor.BatteryPercentage
 import com.vikas.sentinel.data.sensor.GyroscopeSensor
 import com.vikas.sentinel.data.sensor.HumiditySensor
 import com.vikas.sentinel.data.sensor.LightSensors
@@ -75,4 +76,13 @@ object SensorModule {
     fun provideHumiditySensor(@ApplicationContext appContext: Context): MeasurableSensor {
         return HumiditySensor(appContext)
     }
+
+    @Provides
+    @Singleton
+    @BatteryPercentageSensorQualifier
+    fun provideBatteryPercentageSensor(@ApplicationContext appContext: Context): MeasurableSensor {
+        return BatteryPercentage(appContext)
+
+    }
+
 }

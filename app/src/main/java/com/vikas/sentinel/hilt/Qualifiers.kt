@@ -33,3 +33,7 @@ annotation class AmbientTemperatureSensorQualifier
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class HumiditySensorQualifier
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class BatteryPercentageSensorQualifier

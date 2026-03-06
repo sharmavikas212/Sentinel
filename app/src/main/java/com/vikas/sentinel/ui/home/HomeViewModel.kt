@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.vikas.sentinel.data.sensor.MeasurableSensor
 import com.vikas.sentinel.hilt.AccelerometerSensorQualifier
 import com.vikas.sentinel.hilt.AmbientTemperatureSensorQualifier
+import com.vikas.sentinel.hilt.BatteryPercentageSensorQualifier
 import com.vikas.sentinel.hilt.GyroscopeSensorQualifier
 import com.vikas.sentinel.hilt.HumiditySensorQualifier
 import com.vikas.sentinel.hilt.LightSensorQualifier
@@ -29,7 +30,8 @@ class HomeViewModel @Inject constructor(
     @PressureSensorQualifier private val pressureSensor: MeasurableSensor,
     @MagnetometerSensorQualifier private val magnetometerSensor: MeasurableSensor,
     @AmbientTemperatureSensorQualifier private val ambientTemperatureSensor: MeasurableSensor,
-    @HumiditySensorQualifier private val humiditySensor: MeasurableSensor
+    @HumiditySensorQualifier private val humiditySensor: MeasurableSensor,
+    @BatteryPercentageSensorQualifier private val batterySensor: MeasurableSensor,
 ) : ViewModel() {
 
     // Optimization: Define a threshold (e.g., 0.01 change required to update UI)
@@ -88,6 +90,9 @@ class HomeViewModel @Inject constructor(
     val pressureValue = pressureSensor.toStateFlow()
     val ambientTemperatureValue = ambientTemperatureSensor.toStateFlow()
     val humidityValue = humiditySensor.toStateFlow()
+
+    val batteryPercentage = batterySensor.toStateFlow()
+
 
     // Now these are fully optimized:
     val accelerometerValue = accelerometerSensor.toArrayStateFlow()
