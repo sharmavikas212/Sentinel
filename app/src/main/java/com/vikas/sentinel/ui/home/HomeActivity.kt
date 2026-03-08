@@ -10,14 +10,18 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -103,37 +107,59 @@ fun Home(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.White)
-            .verticalScroll(scrollState),
+            .background(Color(0xFFF5F7FA))
+            .verticalScroll(scrollState)
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Row(modifier = Modifier.padding(8.dp)) {
-            Text("Sensor Name", modifier = Modifier.weight(1f))
-            Text("Sensor Value", modifier = Modifier.weight(1f))
-        }
-        HorizontalDivider()
-        SensorReading("Light Sensor", lightReading)
-        SensorReading("Proximity Sensor", proximityReading)
-        SensorReading("Accelerometer Sensor", accelerometerReading)
-        SensorReading("Gyroscope Sensor", gyroscopeReading)
-        SensorReading("Pressure Sensor", pressureReading)
-        SensorReading("Magnetometer Sensor", magnetometerReading)
-        SensorReading("Ambient Temperature Sensor", ambientTemperatureReading)
-        SensorReading("Humidity Sensor", humidityReading)
-        SensorReading("Battery Percentage", batteryPercentage)
-        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            "Sentinel Dashboard",
+            fontSize = 28.sp,
+            fontWeight = FontWeight.ExtraBold,
+            color = Color(0xFF1A1C1E),
+            modifier = Modifier.padding(vertical = 8.dp)
+        )
+
         Compass(magnetometerReading)
-        LightSensorReadingChart(lightReading)
-        AccelerometerMagnitudeChart(accelerometerReading)
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+            LightSensorReadingChart(lightReading, modifier = Modifier.weight(1f))
+            AccelerometerMagnitudeChart(accelerometerReading, modifier = Modifier.weight(1f))
+        }
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+            shape = RoundedCornerShape(16.dp)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                SensorReading("Light", lightReading, "lx")
+                SensorReading("Proximity", proximityReading, "cm")
+                SensorReading("Pressure", pressureReading, "hPa")
+                SensorReading("Temperature", ambientTemperatureReading, "°C")
+                SensorReading("Humidity", humidityReading, "%")
+                SensorReading("Battery", batteryPercentage, "%")
+                SensorReading("Accelerometer", accelerometerReading)
+                SensorReading("Gyroscope", gyroscopeReading)
+                SensorReading("Magnetometer", magnetometerReading)
+            }
+        }
+        Spacer(modifier = Modifier.height(32.dp))
     }
 }
 
 @Composable
-fun SensorReading(name: String, reading: Float) {
-    Row(modifier = Modifier.padding(8.dp)) {
-        Text(text = name, modifier = Modifier.weight(1f))
-        Text(text = "%.2f".format(reading), modifier = Modifier.weight(1f))
+fun SensorReading(name: String, reading: Float, unit: String = "") {
+    Row(
+        modifier = Modifier.padding(vertical = 6.dp).fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(text = name, fontWeight = FontWeight.Medium, color = Color.Gray)
+        Text(
+            text = "%.2f %s".format(reading, unit),
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF2196F3)
+        )
     }
 }
 
@@ -156,45 +182,61 @@ fun Compass(magnetometerReading: FloatArray) {
         else -> "N"
     }
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(16.dp)
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        shape = RoundedCornerShape(16.dp)
     ) {
-        Text("1. Using Magnetometer", fontWeight = FontWeight.Bold)
-        Text(
-            text = "${((azimuth + 360) % 360).toInt()}° $direction",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Medium,
-            color = Color.DarkGray
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        // Simple visual representation of a needle
-        Box(
-            modifier = Modifier.size(100.dp),
-            contentAlignment = Alignment.Center
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(24.dp).fillMaxWidth()
         ) {
-            Text("N", modifier = Modifier.align(Alignment.TopCenter), color = Color.Red, fontWeight = FontWeight.Bold, fontSize = 20.sp)
-            Text("S", modifier = Modifier.align(Alignment.BottomCenter), fontWeight = FontWeight.Bold)
-            Text("E", modifier = Modifier.align(Alignment.CenterEnd), fontWeight = FontWeight.Bold)
-            Text("W", modifier = Modifier.align(Alignment.CenterStart), fontWeight = FontWeight.Bold)
-            // Only the needle (arrow box) rotates
+            Text("Compass", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Text(
+                text = "${((azimuth + 360) % 360).toInt()}° $direction",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.ExtraBold,
+                color = Color(0xFFE91E63)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
             Box(
-                modifier = Modifier
-                    .size(2.dp, 60.dp)
-                    .rotate(-azimuth)
-                    .background(Color.Black)
+                modifier = Modifier.size(120.dp),
+                contentAlignment = Alignment.Center
             ) {
-                // Arrow head
-                Box(modifier = Modifier.size(6.dp).align(Alignment.TopCenter).rotate(45f).background(Color.Red))
-                Box(modifier = Modifier.size(6.dp).align(Alignment.TopCenter).rotate(135f).background(Color.Red))
+                Text("N", modifier = Modifier.align(Alignment.TopCenter), color = Color.Red, fontWeight = FontWeight.Bold)
+                Text("S", modifier = Modifier.align(Alignment.BottomCenter), fontWeight = FontWeight.Bold)
+                Text("E", modifier = Modifier.align(Alignment.CenterEnd), fontWeight = FontWeight.Bold)
+                Text("W", modifier = Modifier.align(Alignment.CenterStart), fontWeight = FontWeight.Bold)
+
+                Box(
+                    modifier = Modifier
+                        .size(4.dp, 80.dp)
+                        .rotate(-azimuth)
+                        .background(Color.DarkGray, RoundedCornerShape(2.dp))
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight(0.5f)
+                            .background(Color.Red)
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-fun AccelerometerMagnitudeChart(reading: FloatArray) {
-    Text("2. Using Accelerometer", fontWeight = FontWeight.Bold)
+fun AccelerometerMagnitudeChart(reading: FloatArray, modifier: Modifier = Modifier) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text("Motion Intensity", fontWeight = FontWeight.Bold, fontSize = 16.sp)
 
     val chartData = remember { mutableStateListOf<LineData>() }
 
@@ -215,25 +257,42 @@ fun AccelerometerMagnitudeChart(reading: FloatArray) {
         LineChart(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp)
+                .height(150.dp)
                 .padding(top = 16.dp),
             data = { currentData },
             color = ChartyColor.Solid(Color.Red),
             lineConfig = LineChartConfig(lineWidth = 10f, showPoints = false, smoothCurve = true)
         )
     }
+        }
+    }
 }
 @Composable
 fun SensorReading(name: String, reading: FloatArray) {
-    Row(modifier = Modifier.padding(8.dp)) {
-        Text(text = name, modifier = Modifier.weight(1f))
-        Text(text = reading.joinToString(",") { "%.2f".format(it) }, modifier = Modifier.weight(1f), maxLines = 1)
+    Row(
+        modifier = Modifier.padding(vertical = 6.dp).fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(text = name, fontWeight = FontWeight.Medium, color = Color.Gray)
+        Text(
+            text = reading.joinToString(", ") { "%.1f".format(it) },
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF4CAF50),
+            maxLines = 1
+        )
     }
 }
 
 @Composable
-fun LightSensorReadingChart(reading: Float) {
-    Text("3. Using Light Sensor", fontWeight = FontWeight.Bold)
+fun LightSensorReadingChart(reading: Float, modifier: Modifier = Modifier) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text("Light Exposure", fontWeight = FontWeight.Bold, fontSize = 16.sp)
     val chartData = remember { mutableStateListOf<LineData>() }
 
     LaunchedEffect(reading) {
@@ -244,24 +303,22 @@ fun LightSensorReadingChart(reading: Float) {
     }
     
     if (chartData.isNotEmpty()) {
-        // Create a copy of the list to force recomposition if needed,
-        // although mutableStateListOf should handle it.
-        // The issue might be that LineChart expects a new list instance or specific data structure.
-        // Let's try passing a new list instance.
         val currentData = chartData.toList()
         
         LineChart(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp)
+                .height(150.dp)
                 .padding(top = 16.dp),
             data = { currentData },
-            color = ChartyColor.Solid(Color(Color.Blue.value)),
+            color = ChartyColor.Solid(Color(0xFFFFC107)),
             lineConfig = LineChartConfig(
                 lineWidth = 10f,
-                showPoints = true,
+                showPoints = false,
                 smoothCurve = true,
             ),
         )
+    }
+        }
     }
 }
