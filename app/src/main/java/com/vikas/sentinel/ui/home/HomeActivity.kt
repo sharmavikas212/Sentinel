@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -42,6 +41,9 @@ import com.himanshoe.charty.color.ChartyColor
 import com.himanshoe.charty.line.LineChart
 import com.himanshoe.charty.line.config.LineChartConfig
 import com.himanshoe.charty.line.data.LineData
+import com.vikas.sentinel.domain.model.EnvironmentalReading
+import com.vikas.sentinel.domain.model.SensorUnit
+import com.vikas.sentinel.domain.model.VectorReading
 import com.vikas.sentinel.ui.theme.SentinelTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -93,15 +95,15 @@ class HomeActivity : ComponentActivity() {
 @Preview(showBackground = true)
 fun Home(
     modifier: Modifier = Modifier,
-    lightReading: Float = 0f,
-    proximityReading: Float = 0f,
-    accelerometerReading: FloatArray = FloatArray(3),
-    gyroscopeReading: FloatArray = FloatArray(3),
-    pressureReading: Float = 0f,
-    magnetometerReading: FloatArray = FloatArray(3),
-    ambientTemperatureReading: Float = 0f,
-    humidityReading: Float = 0f,
-    batteryPercentage: Float = 0f
+    lightReading: EnvironmentalReading = EnvironmentalReading(0f, SensorUnit.LUX),
+    proximityReading: EnvironmentalReading = EnvironmentalReading(0f, SensorUnit.CM),
+    pressureReading: EnvironmentalReading = EnvironmentalReading(0f, SensorUnit.HPA),
+    ambientTemperatureReading: EnvironmentalReading = EnvironmentalReading(0f, SensorUnit.CELSIUS),
+    humidityReading: EnvironmentalReading = EnvironmentalReading(0f, SensorUnit.PERCENT),
+    batteryPercentage: EnvironmentalReading = EnvironmentalReading(0f, SensorUnit.PERCENT),
+    magnetometerReading: VectorReading = VectorReading(0f, 0f, 0f),
+    accelerometerReading: VectorReading = VectorReading(0f, 0f, 0f),
+    gyroscopeReading: VectorReading = VectorReading(0f, 0f, 0f),
 ) {
     val scrollState = rememberScrollState()
     Column(
@@ -149,14 +151,14 @@ fun Home(
 }
 
 @Composable
-fun SensorReading(name: String, reading: Float, unit: String = "") {
+fun SensorReading(name: String, reading: EnvironmentalReading, unit: String = "") {
     Row(
         modifier = Modifier.padding(vertical = 6.dp).fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(text = name, fontWeight = FontWeight.Medium, color = Color.Gray)
         Text(
-            text = "%.2f %s".format(reading, unit),
+            text = "%.2f %s".format(reading.value, unit),
             fontWeight = FontWeight.Bold,
             color = Color(0xFF2196F3)
         )
@@ -164,11 +166,11 @@ fun SensorReading(name: String, reading: Float, unit: String = "") {
 }
 
 @Composable
-fun Compass(magnetometerReading: FloatArray) {
+fun Compass(magnetometerReading: VectorReading) {
     // Calculate azimuth (angle relative to magnetic north)
     // Using atan2 on X and Y components of the magnetometer
     val azimuth = Math.toDegrees(
-        kotlin.math.atan2(magnetometerReading[0].toDouble(), magnetometerReading[1].toDouble())
+        kotlin.math.atan2(magnetometerReading.y.toDouble(), magnetometerReading.x.toDouble())
     ).toFloat()
 
     val direction = when (((azimuth + 360) % 360)) {
@@ -228,7 +230,7 @@ fun Compass(magnetometerReading: FloatArray) {
 }
 
 @Composable
-fun AccelerometerMagnitudeChart(reading: FloatArray, modifier: Modifier = Modifier) {
+fun AccelerometerMagnitudeChart(reading: VectorReading, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -243,7 +245,7 @@ fun AccelerometerMagnitudeChart(reading: FloatArray, modifier: Modifier = Modifi
     LaunchedEffect(reading) {
         // Calculate magnitude (vector length) of the acceleration
         val magnitude = kotlin.math.sqrt(
-            reading[0] * reading[0] + reading[1] * reading[1] + reading[2] * reading[2]
+            reading.x * reading.x + reading.y * reading.y + reading.y * reading.y
         )
         chartData.add(LineData("", magnitude))
         if (chartData.size > 100) {
@@ -268,14 +270,14 @@ fun AccelerometerMagnitudeChart(reading: FloatArray, modifier: Modifier = Modifi
     }
 }
 @Composable
-fun SensorReading(name: String, reading: FloatArray) {
+fun SensorReading(name: String, reading: VectorReading) {
     Row(
         modifier = Modifier.padding(vertical = 6.dp).fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(text = name, fontWeight = FontWeight.Medium, color = Color.Gray)
         Text(
-            text = reading.joinToString(", ") { "%.1f".format(it) },
+            text = "%.1f, %.1f, %.1f".format(reading.x, reading.y, reading.z),
             fontWeight = FontWeight.Bold,
             color = Color(0xFF4CAF50),
             maxLines = 1
@@ -284,7 +286,7 @@ fun SensorReading(name: String, reading: FloatArray) {
 }
 
 @Composable
-fun LightSensorReadingChart(reading: Float, modifier: Modifier = Modifier) {
+fun LightSensorReadingChart(reading: EnvironmentalReading, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -296,7 +298,7 @@ fun LightSensorReadingChart(reading: Float, modifier: Modifier = Modifier) {
     val chartData = remember { mutableStateListOf<LineData>() }
 
     LaunchedEffect(reading) {
-        chartData.add(LineData("", reading))
+        chartData.add(LineData("", reading.value))
         if (chartData.size > 100) {
             chartData.removeAt(0)
         }

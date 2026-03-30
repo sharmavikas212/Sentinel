@@ -2,16 +2,11 @@ package com.vikas.sentinel.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vikas.sentinel.data.sensor.MeasurableSensor
-import com.vikas.sentinel.hilt.AccelerometerSensorQualifier
-import com.vikas.sentinel.hilt.AmbientTemperatureSensorQualifier
-import com.vikas.sentinel.hilt.BatteryPercentageSensorQualifier
-import com.vikas.sentinel.hilt.GyroscopeSensorQualifier
-import com.vikas.sentinel.hilt.HumiditySensorQualifier
-import com.vikas.sentinel.hilt.LightSensorQualifier
-import com.vikas.sentinel.hilt.MagnetometerSensorQualifier
-import com.vikas.sentinel.hilt.PressureSensorQualifier
-import com.vikas.sentinel.hilt.ProximitySensorQualifier
+import com.vikas.sentinel.domain.model.EnvironmentalReading
+import com.vikas.sentinel.domain.model.MeasurableSensor
+import com.vikas.sentinel.domain.model.SensorUnit
+import com.vikas.sentinel.domain.model.VectorReading
+import com.vikas.sentinel.domain.repository.SensorRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -23,15 +18,7 @@ import kotlin.math.abs
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    @LightSensorQualifier private val lightSensor: MeasurableSensor,
-    @ProximitySensorQualifier private val proximitySensor: MeasurableSensor,
-    @AccelerometerSensorQualifier private val accelerometerSensor: MeasurableSensor,
-    @GyroscopeSensorQualifier private val gyroscopeSensor: MeasurableSensor,
-    @PressureSensorQualifier private val pressureSensor: MeasurableSensor,
-    @MagnetometerSensorQualifier private val magnetometerSensor: MeasurableSensor,
-    @AmbientTemperatureSensorQualifier private val ambientTemperatureSensor: MeasurableSensor,
-    @HumiditySensorQualifier private val humiditySensor: MeasurableSensor,
-    @BatteryPercentageSensorQualifier private val batterySensor: MeasurableSensor,
+    sensorRepository: SensorRepository
 ) : ViewModel() {
 
     // Optimization: Define a threshold (e.g., 0.01 change required to update UI)
@@ -85,17 +72,54 @@ class HomeViewModel @Inject constructor(
 
     // --- Exposed States ---
 
-    val lightValue = lightSensor.toStateFlow()
-    val proximityValue = proximitySensor.toStateFlow()
-    val pressureValue = pressureSensor.toStateFlow()
-    val ambientTemperatureValue = ambientTemperatureSensor.toStateFlow()
-    val humidityValue = humiditySensor.toStateFlow()
+    val lightValue: StateFlow<EnvironmentalReading> = sensorRepository.getLightSensorData().stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = EnvironmentalReading(0f, SensorUnit.LUX)
+        )
+    val proximityValue = sensorRepository.getProximitySensorData().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = EnvironmentalReading(0f, SensorUnit.CM)
+    )
 
-    val batteryPercentage = batterySensor.toStateFlow()
+    val pressureValue = sensorRepository.getPressureSensorData().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = EnvironmentalReading(0f, SensorUnit.HPA)
+    )
+    val ambientTemperatureValue = sensorRepository.getAmbientTemperatureSensorData().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = EnvironmentalReading(0f, SensorUnit.CELSIUS)
+    )
+    val humidityValue = sensorRepository.getHumiditySensorData().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = EnvironmentalReading(0f, SensorUnit.PERCENT)
+    )
+
+    val batteryPercentage = sensorRepository.getBatteryPercentage().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = EnvironmentalReading(0f, SensorUnit.PERCENT)
+    )
 
 
     // Now these are fully optimized:
-    val accelerometerValue = accelerometerSensor.toArrayStateFlow()
-    val gyroscopeValue = gyroscopeSensor.toArrayStateFlow()
-    val magnetometerValue = magnetometerSensor.toArrayStateFlow()
+    val accelerometerValue = sensorRepository.getAccelerometerSensorData().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = VectorReading(0f, 0f,0f)
+    )
+    val gyroscopeValue = sensorRepository.getGyroscopeSensorData().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = VectorReading(0f, 0f,0f)
+    )
+    val magnetometerValue = sensorRepository.getMagnetometerSensorData().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = VectorReading(0f, 0f,0f)
+    )
 }

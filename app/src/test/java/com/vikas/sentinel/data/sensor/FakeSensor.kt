@@ -1,5 +1,7 @@
 package com.vikas.sentinel.data.sensor
 
+import com.vikas.sentinel.domain.model.MeasurableSensor
+
 class FakeSensor : MeasurableSensor(sensorType = 0) {
 
     override val doesSensorExist: Boolean = true

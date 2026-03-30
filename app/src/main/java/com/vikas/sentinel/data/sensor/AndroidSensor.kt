@@ -5,6 +5,7 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import com.vikas.sentinel.domain.model.MeasurableSensor
 
 abstract class AndroidSensor(
     private val context: Context,

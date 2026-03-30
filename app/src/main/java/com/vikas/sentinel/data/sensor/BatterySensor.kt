@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
+import com.vikas.sentinel.domain.model.MeasurableSensor
 
 abstract class BatterySensor(
     private val context: Context

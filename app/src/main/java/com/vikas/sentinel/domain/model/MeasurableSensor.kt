@@ -1,4 +1,4 @@
-package com.vikas.sentinel.data.sensor
+package com.vikas.sentinel.domain.model
 
 import android.os.Handler
 import android.os.HandlerThread
