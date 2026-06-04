@@ -1,7 +1,9 @@
 package com.vikas.sentinel.hilt
 
 import android.content.Context
+import androidx.room.Room
 import com.vikas.sentinel.data.repository.SensorRepositoryImpl
+import com.vikas.sentinel.data.room.AppDatabase
 import com.vikas.sentinel.data.sensor.AccelerometerSensor
 import com.vikas.sentinel.data.sensor.AmbientTemperatureSensor
 import com.vikas.sentinel.data.sensor.BatteryPercentage
@@ -31,6 +33,17 @@ abstract class SensorModule {
     ): SensorRepository
 
     companion object {
+
+        @Provides
+        @Singleton
+        fun provideAppDatabase(@ApplicationContext appContext: Context) : AppDatabase{
+            return Room.databaseBuilder(
+                appContext,
+                AppDatabase::class.java,
+                "sensor_database"
+            ).build()
+        }
+
         @Provides
         @Singleton
         @LightSensorQualifier

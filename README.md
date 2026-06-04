@@ -56,15 +56,15 @@ Sentinel is built on a **Clean Architecture** foundation, ensuring modularity, t
 - [x] Used Kotlin Flow for reactive updates
 - [x] Added DI setup
 - [x] Built UI using Jetpack Compose
+- [x] Update README “Getting Started” + add screenshots
+- [x] Improve Compose UI (Material 3 polish, better layout, dark mode)
 
 ### 📝 To Do (now)
-- [ ] Improve Compose UI (Material 3 polish, better layout, dark mode)
 - [ ] Add navigation (Dashboard → Sensor Details)
 - [ ] Add Sensor Details screen (live value + sensor metadata)
 - [ ] Add local history (Room) to save readings
 - [ ] Add export/share (CSV/JSON)
 - [ ] Add basic tests (ViewModel + simple UI test)
-- [ ] Update README “Getting Started” + add screenshots
 
 ### 📡 Telemetry (later)
 - [ ] Define telemetry payload schema (JSON) + topic naming

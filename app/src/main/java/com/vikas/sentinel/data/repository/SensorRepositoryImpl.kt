@@ -1,5 +1,6 @@
 package com.vikas.sentinel.data.repository
 
+import com.vikas.sentinel.data.room.AppDatabase
 import com.vikas.sentinel.domain.model.EnvironmentalReading
 import com.vikas.sentinel.domain.model.MeasurableSensor
 import com.vikas.sentinel.domain.model.SensorUnit
@@ -14,7 +15,9 @@ import com.vikas.sentinel.hilt.LightSensorQualifier
 import com.vikas.sentinel.hilt.MagnetometerSensorQualifier
 import com.vikas.sentinel.hilt.PressureSensorQualifier
 import com.vikas.sentinel.hilt.ProximitySensorQualifier
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -28,14 +31,19 @@ class SensorRepositoryImpl @Inject constructor(
     @AmbientTemperatureSensorQualifier private val ambientTemperatureSensor: MeasurableSensor,
     @HumiditySensorQualifier private val humiditySensor: MeasurableSensor,
     @BatteryPercentageSensorQualifier private val batterySensor: MeasurableSensor,
+    private val db: AppDatabase
 ) : SensorRepository {
 
     // Helper for single-value environmental sensors
     private fun MeasurableSensor.asEnvironmentalFlow(unitType: SensorUnit): Flow<EnvironmentalReading> {
-        return this.sensorFlow.map { values ->
-            EnvironmentalReading(value = values.firstOrNull() ?: 0f,
-                unit = unitType)
-        }
+        return this.sensorFlow
+            .flowOn(Dispatchers.IO)
+            .map { values ->
+                EnvironmentalReading(
+                    value = values.firstOrNull() ?: 0f,
+                    unit = unitType
+                )
+            }
     }
 
     // Helper for 3-axis vector sensors
@@ -49,21 +57,29 @@ class SensorRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getLightSensorData(): Flow<EnvironmentalReading> = lightSensor.asEnvironmentalFlow(SensorUnit.LUX)
+    override fun getLightSensorData(): Flow<EnvironmentalReading> =
+        lightSensor.asEnvironmentalFlow(SensorUnit.LUX)
 
-    override fun getProximitySensorData(): Flow<EnvironmentalReading> = proximitySensor.asEnvironmentalFlow(SensorUnit.CM)
+    override fun getProximitySensorData(): Flow<EnvironmentalReading> =
+        proximitySensor.asEnvironmentalFlow(SensorUnit.CM)
 
-    override fun getPressureSensorData(): Flow<EnvironmentalReading> = pressureSensor.asEnvironmentalFlow(SensorUnit.HPA)
+    override fun getPressureSensorData(): Flow<EnvironmentalReading> =
+        pressureSensor.asEnvironmentalFlow(SensorUnit.HPA)
 
-    override fun getAmbientTemperatureSensorData(): Flow<EnvironmentalReading> = ambientTemperatureSensor.asEnvironmentalFlow(SensorUnit.CELSIUS)
+    override fun getAmbientTemperatureSensorData(): Flow<EnvironmentalReading> =
+        ambientTemperatureSensor.asEnvironmentalFlow(SensorUnit.CELSIUS)
 
-    override fun getHumiditySensorData(): Flow<EnvironmentalReading> = humiditySensor.asEnvironmentalFlow(SensorUnit.PERCENT)
+    override fun getHumiditySensorData(): Flow<EnvironmentalReading> =
+        humiditySensor.asEnvironmentalFlow(SensorUnit.PERCENT)
 
-    override fun getBatteryPercentage(): Flow<EnvironmentalReading> = batterySensor.asEnvironmentalFlow(SensorUnit.PERCENT)
+    override fun getBatteryPercentage(): Flow<EnvironmentalReading> =
+        batterySensor.asEnvironmentalFlow(SensorUnit.PERCENT)
 
-    override fun getAccelerometerSensorData(): Flow<VectorReading> = accelerometerSensor.asVectorFlow()
+    override fun getAccelerometerSensorData(): Flow<VectorReading> =
+        accelerometerSensor.asVectorFlow()
 
     override fun getGyroscopeSensorData(): Flow<VectorReading> = gyroscopeSensor.asVectorFlow()
 
-    override fun getMagnetometerSensorData(): Flow<VectorReading> = magnetometerSensor.asVectorFlow()
+    override fun getMagnetometerSensorData(): Flow<VectorReading> =
+        magnetometerSensor.asVectorFlow()
 }
