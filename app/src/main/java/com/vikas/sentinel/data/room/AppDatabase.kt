@@ -2,9 +2,11 @@ package com.vikas.sentinel.data.room
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 
 
-@Database(entities = [Light::class, Humidity::class, Pressure::class, Proximity::class, Temperature::class], version = 1)
+@Database(entities = [SensorRecord::class], version = 1)
+@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun sensorDao() : SensorDao
+    abstract fun sensorDao(): SensorDao
 }

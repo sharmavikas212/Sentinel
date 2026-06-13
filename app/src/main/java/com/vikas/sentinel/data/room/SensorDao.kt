@@ -7,14 +7,14 @@ import androidx.room.Query
 @Dao
 interface SensorDao {
     @Insert
-    suspend fun insertLight(vararg light: Light)
+    suspend fun insertSensorReading(vararg sensorRecord: SensorRecord)
 
-    @Query("SELECT * FROM Light WHERE isSynced = 0 LIMIT 100")
-    suspend fun getUnsyncedLightReadings(): List<Light>
+    @Query("SELECT * FROM sensor_records WHERE isSynced = 0 LIMIT 100")
+    suspend fun getUnsyncedLightReadings(): List<SensorRecord>
 
-    @Query("UPDATE Light SET isSynced = 1 WHERE timestamp IN (:timestamp)")
+    @Query("UPDATE sensor_records SET isSynced = 1 WHERE timestamp IN (:timestamp)")
     suspend fun markAsSynced(timestamp: List<Long>)
 
-    @Query("DELETE FROM Light WHERE isSynced = 1")
+    @Query("DELETE FROM sensor_records WHERE isSynced = 1")
     suspend fun deleteSyncedReadings()
 }
