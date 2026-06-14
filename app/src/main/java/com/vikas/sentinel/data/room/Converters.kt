@@ -16,6 +16,17 @@ class Converters {
         return if (value.isEmpty()) emptyList() else value.split(",").map { it.toFloat() }
     }
 
+    // Converter for FloatArray
+    @TypeConverter
+    fun fromFloatArray(value: FloatArray): String {
+        return value.joinToString(separator = ",")
+    }
+
+    @TypeConverter
+    fun toFloatArray(value: String): FloatArray {
+        return if (value.isEmpty()) floatArrayOf() else value.split(",").map { it.toFloat() }.toFloatArray()
+    }
+
 
     // Converter for SensorUnit Enum
     @TypeConverter

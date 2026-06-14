@@ -1,6 +1,7 @@
 package com.vikas.sentinel.domain.repository
 
 import com.vikas.sentinel.domain.model.EnvironmentalReading
+import com.vikas.sentinel.domain.model.SensorUnit
 import com.vikas.sentinel.domain.model.VectorReading
 import kotlinx.coroutines.flow.Flow
 
@@ -14,4 +15,6 @@ interface SensorRepository {
     fun getAmbientTemperatureSensorData(): Flow<EnvironmentalReading>
     fun getHumiditySensorData(): Flow<EnvironmentalReading>
     fun getBatteryPercentage(): Flow<EnvironmentalReading>
+
+    suspend fun saveSensorReading(sensorType: String, values: FloatArray, unit: SensorUnit)
 }

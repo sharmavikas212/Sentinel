@@ -17,7 +17,7 @@ data class SensorRecord(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val timestamp: Long = System.currentTimeMillis(),
     val sensorType: String,
-    val values: List<Float>,
+    val values: FloatArray,
     val unit: SensorUnit,
     val isSynced: Boolean,
 )
