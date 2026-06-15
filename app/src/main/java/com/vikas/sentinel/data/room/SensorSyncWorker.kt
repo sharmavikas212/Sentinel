@@ -1,6 +1,7 @@
 package com.vikas.sentinel.data.room
 
 import android.content.Context
+import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
@@ -11,7 +12,7 @@ import dagger.assisted.AssistedInject
 class SensorSyncWorker @AssistedInject constructor(
     @Assisted appContext: Context,
     @Assisted workerParams: WorkerParameters,
-    private val sensorDao: SensorDao
+    private val sensorDao: SensorDao,
 ) : CoroutineWorker(appContext, workerParams) {
 
     override suspend fun doWork(): Result {
@@ -19,6 +20,7 @@ class SensorSyncWorker @AssistedInject constructor(
             // 1. Fetch unsynced data from Room
             // (Note: You'll need to add an 'isSynced' flag to your Room entities)
             val unsyncedReadings = sensorDao.getUnsyncedLightReadings()
+            Log.d("SensorSyncWorker", "Worker triggered! Found ${unsyncedReadings.size} readings")
 
             if (unsyncedReadings.isEmpty()) return Result.success()
 
@@ -33,6 +35,8 @@ class SensorSyncWorker @AssistedInject constructor(
 
             // 4. On success, mark as synced in local DB
             sensorDao.markAsSynced(unsyncedReadings.map { it.timestamp })
+            Log.d("SensorSyncWorker", "Sync successful for ${unsyncedReadings.size} items")
+            TODO("sync is still not happening, although it is finding 100 entries in above log, but stuck at those hundred")
 
             Result.success()
         } catch (e: Exception) {

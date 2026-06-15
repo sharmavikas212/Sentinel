@@ -46,6 +46,10 @@ abstract class SensorModule {
 
         @Provides
         @Singleton
+        fun provideSensorDao(db: AppDatabase) = db.sensorDao()
+
+        @Provides
+        @Singleton
         @LightSensorQualifier
         fun provideLightSensor(@ApplicationContext appContext: Context): MeasurableSensor {
             return LightSensors(appContext)

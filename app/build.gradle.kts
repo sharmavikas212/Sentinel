@@ -42,6 +42,8 @@ android {
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.hilt.common)
+    implementation(libs.androidx.hilt.work)
+
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
@@ -69,7 +71,9 @@ dependencies {
 
     implementation(libs.hilt.android) // Hilt DI codegen
     ksp(libs.hilt.compiler) // Required for @HiltViewModel
+    ksp(libs.androidx.hilt.compiler)
     ksp(libs.androidx.room.compiler)
+
 
     implementation(libs.charty)
 

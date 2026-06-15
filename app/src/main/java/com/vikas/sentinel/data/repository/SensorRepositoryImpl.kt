@@ -1,8 +1,17 @@
 package com.vikas.sentinel.data.repository
 
+import android.content.Context
 import android.hardware.Sensor
+import android.util.Log
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.vikas.sentinel.data.room.AppDatabase
 import com.vikas.sentinel.data.room.SensorRecord
+import com.vikas.sentinel.data.room.SensorSyncWorker
 import com.vikas.sentinel.domain.model.EnvironmentalReading
 import com.vikas.sentinel.domain.model.MeasurableSensor
 import com.vikas.sentinel.domain.model.SensorUnit
@@ -17,11 +26,13 @@ import com.vikas.sentinel.hilt.LightSensorQualifier
 import com.vikas.sentinel.hilt.MagnetometerSensorQualifier
 import com.vikas.sentinel.hilt.PressureSensorQualifier
 import com.vikas.sentinel.hilt.ProximitySensorQualifier
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class SensorRepositoryImpl @Inject constructor(
@@ -34,7 +45,8 @@ class SensorRepositoryImpl @Inject constructor(
     @AmbientTemperatureSensorQualifier private val ambientTemperatureSensor: MeasurableSensor,
     @HumiditySensorQualifier private val humiditySensor: MeasurableSensor,
     @BatteryPercentageSensorQualifier private val batterySensor: MeasurableSensor,
-    private val db: AppDatabase
+    private val db: AppDatabase,
+    @ApplicationContext private val context: Context
 ) : SensorRepository {
 
     // Helper to convert Int constants to readable strings for the DB
@@ -53,7 +65,31 @@ class SensorRepositoryImpl @Inject constructor(
         }
     }
 
-    private val accelerometerBuffer = mutableListOf<SensorRecord>()
+    val periodicSyncRequest = PeriodicWorkRequestBuilder<SensorSyncWorker>(5, TimeUnit.SECONDS)
+        .setConstraints(
+            Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED) // Only sync when online
+                .setRequiresBatteryNotLow(false) // Changed to false for easier testing
+                .build()
+        )
+        .build()
+
+    fun triggerSyncWorkerTest() {
+        // Enqueue a OneTimeWorkRequest for immediate testing
+        val testRequest = OneTimeWorkRequestBuilder<SensorSyncWorker>().build()
+        WorkManager.getInstance(context).enqueue(testRequest)
+
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+            "SensorSync",
+            ExistingPeriodicWorkPolicy.KEEP,
+            periodicSyncRequest
+        )
+        Log.d("SensorRepository", "Worker enqueued for sync!")
+    }
+
+    init {
+        triggerSyncWorkerTest()
+    }
 
     // Helper for single-value environmental sensors
     private fun MeasurableSensor.asEnvironmentalFlow(
@@ -134,6 +170,7 @@ class SensorRepositoryImpl @Inject constructor(
         values: FloatArray,
         unit: SensorUnit
     ) {
+
         db.sensorDao().insertSensorReading(
             SensorRecord(
                 sensorType = sensorType,

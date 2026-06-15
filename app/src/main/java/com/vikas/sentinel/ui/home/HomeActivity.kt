@@ -124,7 +124,10 @@ fun Home(
         )
 
         Compass(magnetometerReading)
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
             LightSensorReadingChart(lightReading, modifier = Modifier.weight(1f))
             AccelerometerMagnitudeChart(accelerometerReading, modifier = Modifier.weight(1f))
         }
@@ -153,7 +156,9 @@ fun Home(
 @Composable
 fun SensorReading(name: String, reading: EnvironmentalReading, unit: String = "") {
     Row(
-        modifier = Modifier.padding(vertical = 6.dp).fillMaxWidth(),
+        modifier = Modifier
+            .padding(vertical = 6.dp)
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(text = name, fontWeight = FontWeight.Medium, color = Color.Gray)
@@ -192,7 +197,9 @@ fun Compass(magnetometerReading: VectorReading) {
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(24.dp).fillMaxWidth()
+            modifier = Modifier
+                .padding(24.dp)
+                .fillMaxWidth()
         ) {
             Text("Compass", fontWeight = FontWeight.Bold, fontSize = 18.sp)
             Text(
@@ -206,10 +213,27 @@ fun Compass(magnetometerReading: VectorReading) {
                 modifier = Modifier.size(120.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text("N", modifier = Modifier.align(Alignment.TopCenter), color = Color.Red, fontWeight = FontWeight.Bold)
-                Text("S", modifier = Modifier.align(Alignment.BottomCenter), fontWeight = FontWeight.Bold)
-                Text("E", modifier = Modifier.align(Alignment.CenterEnd), fontWeight = FontWeight.Bold)
-                Text("W", modifier = Modifier.align(Alignment.CenterStart), fontWeight = FontWeight.Bold)
+                Text(
+                    "N",
+                    modifier = Modifier.align(Alignment.TopCenter),
+                    color = Color.Red,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    "S",
+                    modifier = Modifier.align(Alignment.BottomCenter),
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    "E",
+                    modifier = Modifier.align(Alignment.CenterEnd),
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    "W",
+                    modifier = Modifier.align(Alignment.CenterStart),
+                    fontWeight = FontWeight.Bold
+                )
 
                 Box(
                     modifier = Modifier
@@ -240,39 +264,46 @@ fun AccelerometerMagnitudeChart(reading: VectorReading, modifier: Modifier = Mod
         Column(modifier = Modifier.padding(16.dp)) {
             Text("Motion Intensity", fontWeight = FontWeight.Bold, fontSize = 16.sp)
 
-    val chartData = remember { mutableStateListOf<LineData>() }
+            val chartData = remember { mutableStateListOf<LineData>() }
 
-    LaunchedEffect(reading) {
-        // Calculate magnitude (vector length) of the acceleration
-        val magnitude = kotlin.math.sqrt(
-            reading.x * reading.x + reading.y * reading.y + reading.y * reading.y
-        )
-        chartData.add(LineData("", magnitude))
-        if (chartData.size > 100) {
-            chartData.removeAt(0)
-        }
-    }
+            LaunchedEffect(reading) {
+                // Calculate magnitude (vector length) of the acceleration
+                val magnitude = kotlin.math.sqrt(
+                    reading.x * reading.x + reading.y * reading.y + reading.y * reading.y
+                )
+                chartData.add(LineData("", magnitude))
+                if (chartData.size > 100) {
+                    chartData.removeAt(0)
+                }
+            }
 
-    val currentData = chartData.toList()
+            val currentData = chartData.toList()
 
-    if (chartData.isNotEmpty()) {
-        LineChart(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(150.dp)
-                .padding(top = 16.dp),
-            data = { currentData },
-            color = ChartyColor.Solid(Color.Red),
-            lineConfig = LineChartConfig(lineWidth = 10f, showPoints = false, smoothCurve = true)
-        )
-    }
+            if (chartData.isNotEmpty()) {
+                LineChart(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp)
+                        .padding(top = 16.dp),
+                    data = { currentData },
+                    color = ChartyColor.Solid(Color.Red),
+                    lineConfig = LineChartConfig(
+                        lineWidth = 10f,
+                        showPoints = false,
+                        smoothCurve = true
+                    )
+                )
+            }
         }
     }
 }
+
 @Composable
 fun SensorReading(name: String, reading: VectorReading) {
     Row(
-        modifier = Modifier.padding(vertical = 6.dp).fillMaxWidth(),
+        modifier = Modifier
+            .padding(vertical = 6.dp)
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(text = name, fontWeight = FontWeight.Medium, color = Color.Gray)
@@ -295,32 +326,32 @@ fun LightSensorReadingChart(reading: EnvironmentalReading, modifier: Modifier = 
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text("Light Exposure", fontWeight = FontWeight.Bold, fontSize = 16.sp)
-    val chartData = remember { mutableStateListOf<LineData>() }
+            val chartData = remember { mutableStateListOf<LineData>() }
 
-    LaunchedEffect(reading) {
-        chartData.add(LineData("", reading.value))
-        if (chartData.size > 100) {
-            chartData.removeAt(0)
-        }
-    }
-    
-    if (chartData.isNotEmpty()) {
-        val currentData = chartData.toList()
-        
-        LineChart(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(150.dp)
-                .padding(top = 16.dp),
-            data = { currentData },
-            color = ChartyColor.Solid(Color(0xFFFFC107)),
-            lineConfig = LineChartConfig(
-                lineWidth = 10f,
-                showPoints = false,
-                smoothCurve = true,
-            ),
-        )
-    }
+            LaunchedEffect(reading) {
+                chartData.add(LineData("", reading.value))
+                if (chartData.size > 100) {
+                    chartData.removeAt(0)
+                }
+            }
+
+            if (chartData.isNotEmpty()) {
+                val currentData = chartData.toList()
+
+                LineChart(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp)
+                        .padding(top = 16.dp),
+                    data = { currentData },
+                    color = ChartyColor.Solid(Color(0xFFFFC107)),
+                    lineConfig = LineChartConfig(
+                        lineWidth = 10f,
+                        showPoints = false,
+                        smoothCurve = true,
+                    ),
+                )
+            }
         }
     }
 }
