@@ -49,6 +49,8 @@ class SensorRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ) : SensorRepository {
 
+    private var itemStored = 0
+
     // Helper to convert Int constants to readable strings for the DB
     private fun getSensorName(sensorType: Int): String {
         return when (sensorType) {
@@ -106,6 +108,12 @@ class SensorRepositoryImpl @Inject constructor(
                 )
                 val duration = System.currentTimeMillis() - startTime
                 println("Single inserts took: $duration ms")
+                itemStored++
+                println("Items stored count: $itemStored")
+                if (itemStored >= 5000) {
+                    triggerSyncWorkerTest()
+                    itemStored = 0
+                }
             }
             .map { values ->
                 EnvironmentalReading(
@@ -132,6 +140,12 @@ class SensorRepositoryImpl @Inject constructor(
                 )
                 val duration = System.currentTimeMillis() - startTime
                 println("Single inserts took - vector: $duration ms")
+                itemStored++
+                println("Items stored count: $itemStored")
+                if (itemStored >= 5000) {
+                    triggerSyncWorkerTest()
+                    itemStored = 0
+                }
             }
             .map { values ->
                 VectorReading(

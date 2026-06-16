@@ -34,11 +34,10 @@ class SensorSyncWorker @AssistedInject constructor(
             // val response = apiService.uploadReadings(payload)
 
             // 4. On success, mark as synced in local DB
-            sensorDao.markAsSynced(unsyncedReadings.map { it.timestamp })
+            sensorDao.markAsSynced(unsyncedReadings.map { it.id })
             Log.d("SensorSyncWorker", "Sync successful for ${unsyncedReadings.size} items")
-            TODO("sync is still not happening, although it is finding 100 entries in above log, but stuck at those hundred")
-
-            Result.success()
+            
+            return Result.success()
         } catch (e: Exception) {
             // Retry if it's a transient network error
             if (runAttemptCount < 3) Result.retry() else Result.failure()
