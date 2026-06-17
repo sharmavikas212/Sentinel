@@ -35,8 +35,11 @@ class SensorSyncWorker @AssistedInject constructor(
 
             // 4. On success, mark as synced in local DB
             sensorDao.markAsSynced(unsyncedReadings.map { it.id })
-            Log.d("SensorSyncWorker", "Sync successful for ${unsyncedReadings.size} items")
+            val deletedCount = sensorDao.deleteSyncedReadings()
+            Log.d("SensorSyncWorker", "Sync successful for ${unsyncedReadings.size} items.")
+            Log.d("SensorSyncWorker", "Cleaned up $deletedCount synced items from local database.")
             
+
             return Result.success()
         } catch (e: Exception) {
             // Retry if it's a transient network error

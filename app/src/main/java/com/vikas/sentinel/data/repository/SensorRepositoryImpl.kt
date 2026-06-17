@@ -50,6 +50,7 @@ class SensorRepositoryImpl @Inject constructor(
 ) : SensorRepository {
 
     private var itemStored = 0
+    private val cacheCap = 500
 
     // Helper to convert Int constants to readable strings for the DB
     private fun getSensorName(sensorType: Int): String {
@@ -110,7 +111,7 @@ class SensorRepositoryImpl @Inject constructor(
                 println("Single inserts took: $duration ms")
                 itemStored++
                 println("Items stored count: $itemStored")
-                if (itemStored >= 5000) {
+                if (itemStored >= cacheCap) {
                     triggerSyncWorkerTest()
                     itemStored = 0
                 }
@@ -142,7 +143,7 @@ class SensorRepositoryImpl @Inject constructor(
                 println("Single inserts took - vector: $duration ms")
                 itemStored++
                 println("Items stored count: $itemStored")
-                if (itemStored >= 5000) {
+                if (itemStored >= cacheCap) {
                     triggerSyncWorkerTest()
                     itemStored = 0
                 }
