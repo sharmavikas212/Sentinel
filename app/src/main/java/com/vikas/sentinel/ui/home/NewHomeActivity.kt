@@ -4,6 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -33,13 +36,113 @@ class NewHomeActivity : ComponentActivity() {
     @Preview(showBackground = true)
     @Composable
     fun Dashboard() {
-        WaveCard(
-            "Temperature",
-            "°C",
-            "65",
-            Modifier,
-            Icons.Default.DeviceThermostat
-        )
+        Column(Modifier.fillMaxWidth()){
+            Row(modifier = Modifier.padding(16.dp).fillMaxWidth()) {
+                Column(Modifier.weight(1f)) {
+                    WaveCard(
+                        "Light",
+                        "°C",
+                        "65",
+                        Modifier.fillMaxWidth(),
+                        Icons.Default.DeviceThermostat
+                    )
+                }
+                Spacer(Modifier.padding(5.dp))
+                Column(Modifier.weight(1f)) {
+                    WaveCard(
+                        "battery",
+                        "°C",
+                        "65",
+                        Modifier.fillMaxWidth(),
+                        Icons.Default.DeviceThermostat
+                    )
+                }
+            }
+            Row(modifier = Modifier.padding(16.dp)) {
+                Column(Modifier.weight(1f)) {
+                    WaveCard(
+                        "temp",
+                        "°C",
+                        "65",
+                        Modifier.fillMaxWidth(),
+                        Icons.Default.DeviceThermostat
+                    )
+                }
+                Spacer(Modifier.padding(5.dp))
+                Column(Modifier.weight(1f)) {
+                    WaveCard(
+                        "humidity",
+                        "°C",
+                        "65",
+                        Modifier.fillMaxWidth(),
+                        Icons.Default.DeviceThermostat
+                    )
+                }
+            }
+            Row(modifier = Modifier.padding(16.dp)) {
+                Column(Modifier.weight(1f)) {
+                    WaveCard(
+                        "proximity",
+                        "°C",
+                        "65",
+                        Modifier.fillMaxWidth(),
+                        Icons.Default.DeviceThermostat
+                    )
+                }
+                Spacer(Modifier.padding(5.dp))
+                Column(Modifier.weight(1f)) {
+                    WaveCard(
+                        "pressure",
+                        "°C",
+                        "65",
+                        Modifier.fillMaxWidth(),
+                        Icons.Default.DeviceThermostat
+                    )
+                }
+            }
+            Row(modifier = Modifier.padding(16.dp)) {
+                Column(Modifier.weight(1f)) {
+                    WaveCard(
+                        "accel",
+                        "°C",
+                        "65",
+                        Modifier.fillMaxWidth(),
+                        Icons.Default.DeviceThermostat
+                    )
+                }
+                Spacer(Modifier.padding(5.dp))
+                Column(Modifier.weight(1f)) {
+                    WaveCard(
+                        "gyro",
+                        "°C",
+                        "65",
+                        Modifier.fillMaxWidth(),
+                        Icons.Default.DeviceThermostat
+                    )
+                }
+            }
+            Row(modifier = Modifier.padding(16.dp)) {
+                Column(Modifier.weight(1f)) {
+                    WaveCard(
+                        "magneto",
+                        "°C",
+                        "65",
+                        Modifier.fillMaxWidth(),
+                        Icons.Default.DeviceThermostat
+                    )
+                }
+                Spacer(Modifier.padding(5.dp))
+                Column(Modifier.weight(1f)) {
+                    WaveCard(
+                        "---------",
+                        "°C",
+                        "65",
+                        Modifier.fillMaxWidth(),
+                        Icons.Default.DeviceThermostat
+                    )
+                }
+            }
+        }
     }
 
     @Composable
