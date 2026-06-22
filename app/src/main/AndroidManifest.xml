@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Sentinel">
         <activity
-            android:name=".ui.home.HomeActivity"
+            android:name=".ui.home.NewHomeActivity"
             android:exported="true"
             android:theme="@style/Theme.Sentinel">
             <intent-filter>
@@ -22,8 +22,7 @@
             </intent-filter>
         </activity>
 
-        <provider
-            android:name="androidx.startup.InitializationProvider"
+        <provider android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
             android:exported="false"
             tools:node="merge"
