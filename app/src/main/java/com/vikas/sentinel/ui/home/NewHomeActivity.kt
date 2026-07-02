@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,18 +16,26 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Brightness5
 import androidx.compose.material.icons.filled.DeviceThermostat
-import androidx.compose.material.icons.filled.Preview
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -38,8 +45,11 @@ import com.vikas.sentinel.domain.model.SensorUnit
 import com.vikas.sentinel.domain.model.VectorReading
 import com.vikas.sentinel.ui.theme.SentinelTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 val CardBgd = Color(0xFF1B1F2B)
+val DashboardBgd = Color(0xFF0F111A)
+
 
 @AndroidEntryPoint
 class NewHomeActivity : ComponentActivity() {
@@ -59,7 +69,7 @@ class NewHomeActivity : ComponentActivity() {
                 val accel by viewModel.accelerometerValue.collectAsStateWithLifecycle()
                 val gyro by viewModel.gyroscopeValue.collectAsStateWithLifecycle()
                 val magneto by viewModel.magnetometerValue.collectAsStateWithLifecycle()
-                Dashboard(light,battery,temp,humidity,proximity,pressure,accel,gyro,magneto)
+                Dashboard(light, battery, temp, humidity, proximity, pressure, accel, gyro, magneto)
             }
         }
 
@@ -80,24 +90,28 @@ class NewHomeActivity : ComponentActivity() {
         magneto: VectorReading = VectorReading(0f, 0f, 0f)
     ) {
 
-        Scaffold { paddingValues ->
+        Scaffold(containerColor = DashboardBgd) { paddingValues ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues),
                 verticalArrangement = Arrangement.Center
             ) {
-                Row(modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth()) {
+                HeaderSection()
+                Row(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth()
+                ) {
                     Column(Modifier.weight(1f)) {
                         WaveCard(
                             "Light",
                             "°C",
                             "%.1f".format(light.value),
                             Modifier.fillMaxWidth(),
-                            Icons.Default.Brightness5
-                        )
+                            Icons.Default.Brightness5,
+
+                            )
                     }
                     Spacer(Modifier.padding(5.dp))
                     Column(Modifier.weight(1f)) {
@@ -199,27 +213,48 @@ class NewHomeActivity : ComponentActivity() {
     }
 
     @Composable
+    private fun HeaderSection() {
+        Row(horizontalArrangement = Arrangement.Center) {
+            Text(
+                text = "Sentinel Platform",
+                color = Color.White,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
     fun WaveCard(
         sensorName: String,
         unit: String,
         reading: String,
         modifier: Modifier,
-        icon: ImageVector,
+        icon: ImageVector
     ) {
+        val sheetState = rememberModalBottomSheetState()
+        val scope = rememberCoroutineScope()
+        var showBottomSheet by remember { mutableStateOf(false) }
+
         Card(
             modifier = modifier,
             colors = CardDefaults.cardColors(containerColor = CardBgd),
             shape = RoundedCornerShape(
                 12.dp
-            )
+            ),
+            onClick = {
+                showBottomSheet = true
+            }
         ) {
             Column(
                 Modifier
                     .padding(16.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(sensorName,
-                        color = Color.White)
+                    Text(
+                        sensorName,
+                        color = Color.White
+                    )
                     Spacer(Modifier.padding(10.dp))
                     Icon(
                         icon,
@@ -229,10 +264,40 @@ class NewHomeActivity : ComponentActivity() {
                     )
                 }
                 Row(Modifier.padding(top = 8.dp)) {
-                    Text("${reading}${unit}",
-                        color = Color.White)
+                    Text(
+                        "${reading}${unit}",
+                        color = Color.White
+                    )
+                }
+            }
+        }
+
+        if (showBottomSheet) {
+            ModalBottomSheet(
+                onDismissRequest = {
+                    showBottomSheet = false
+                },
+                sheetState = sheetState
+            ) {
+                Button(onClick = {
+                    scope.launch {
+                        sheetState.hide()
+                    }.invokeOnCompletion {
+                        if (!sheetState.isVisible) {
+                            showBottomSheet = false
+                        }
+                    }
+                }) {
+                    Text("Hide Bottom Sheet")
                 }
             }
         }
     }
+
+    @Composable
+    fun BottomSheetContent() {
+        // TODO: implement new ui for sheet 
+    }
+
+
 }
